@@ -32,7 +32,7 @@ bookId=12345&author=Tan+Ah+Teck
 T2
 ,
     3 => <<<T3
-GET /sum/nums=1,2,3,4 HTTP/1.1
+GET /sum?nums=1,2,3,4 HTTP/1.1
 Host: shpp.me
 Accept: image/gif, image/jpeg, */*
 Accept-Language: en-us
