@@ -52,7 +52,7 @@ login=student&password=12345
 T4
 ,
     5 => <<<T5
-GET / HTTP/1.1
+GET /hey/text.txt HTTP/1.1
 Host: student.shpp.me
 Accept: image/gif, image/jpeg, */*
 Accept-Language: en-us
