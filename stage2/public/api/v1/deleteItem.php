@@ -1,5 +1,7 @@
 <?php
-$id = $_POST['id'] ?? $_GET['id'] ?? '';
+$data = json_decode(file_get_contents("php://input"), true);
+
+$id = $data['id'] ?? '';
 
 if($id === '' || !is_numeric($id)){
     // вывести ошибку

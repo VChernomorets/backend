@@ -25,8 +25,9 @@ class Todo
         $data = $this->getItems();
         foreach ($data as $item) {
             if($item['id'] === $id){
-                $item['text'] = $text;
-                $item['checked'] = $checked;
+                $i = array_search($item, $data);
+                $data[$i]['text'] = $text;
+                $data[$i]['checked'] = $checked;
                 $this->write($data);
                 return;
             }
@@ -38,7 +39,7 @@ class Todo
         $data = $this->getItems();
         foreach ($data as $item) {
             if($item['id'] == $id){
-                unset($data[$item]);
+                unset($data[array_search($item, $data)]);
                 sort($data);
                 $this->write($data);
                 return;

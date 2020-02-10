@@ -1,5 +1,7 @@
 <?php
-$text = $_POST['text'] ?? $_GET['text'] ?? '';
+$data = json_decode(file_get_contents("php://input"), true);
+
+$text = $data['text'] ?? '';
 
 if($text === ''){
     // вывести ошибку
