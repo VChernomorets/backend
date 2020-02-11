@@ -32,7 +32,7 @@ class Todo
                 return;
             }
         }
-        // обработать ошибку
+        $this->showError('Record with such id not found');
     }
 
     public function delete($id){
@@ -45,7 +45,7 @@ class Todo
                 return;
             }
         }
-        // обработать ошибку
+        $this->showError('Record with such id not found');
     }
 
     public function add($text){
@@ -70,4 +70,9 @@ class Todo
         fclose($file);
     }
 
+    private function showError($message){
+        header('HTTP/1.0 400 Bad Request');
+        echo json_encode(['error' => $message]);
+        return;
+    }
 }

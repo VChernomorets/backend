@@ -4,7 +4,9 @@ $data = json_decode(file_get_contents("php://input"), true);
 $id = $data['id'] ?? '';
 
 if($id === '' || !is_numeric($id)){
-    // вывести ошибку
+    header('HTTP/1.0 400 Bad Request');
+    echo json_encode(['error' => 'Id must contain an integer character']);
+    return;
 }
 
 $dir = dirname(__DIR__,3);

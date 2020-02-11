@@ -4,7 +4,9 @@ $data = json_decode(file_get_contents("php://input"), true);
 $text = $data['text'] ?? '';
 
 if($text === ''){
-    // вывести ошибку
+    header('HTTP/1.0 400 Bad Request');
+    echo json_encode(['error' => '$text - should not be empty']);
+    return;
 }
 $text = htmlspecialchars($text);
 
