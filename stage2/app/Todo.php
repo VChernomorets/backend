@@ -1,4 +1,6 @@
 <?php
+include 'DB.php';
+
 
 /**
  * Class Todo
@@ -8,10 +10,12 @@
 class Todo
 {
     private $config;
+    private $db;
 
     public function __construct()
     {
         $this->config = include 'config.php';
+        $this->db = new DB();
     }
 
     /**
@@ -19,14 +23,7 @@ class Todo
      * @return array List of entries.
      */
     public function getItems(){
-        if(!file_exists($this->config['data']['todo'])){
-            $this->write();
-            return [];
-        }
-        if($data = file_get_contents($this->config['data']['todo'])){
-            return json_decode($data, true);
-        }
-        return [];
+        return $this->db->select('SELECT * FROM `todo`', []);
     }
 
     /**
@@ -37,17 +34,8 @@ class Todo
      * @param $checked bool status
      */
     public function change($id, $text, $checked){
-        $data = $this->getItems();
-        foreach ($data as $item) {
-            if($item['id'] === $id){
-                $i = array_search($item, $data);
-                $data[$i]['text'] = $text;
-                $data[$i]['checked'] = $checked;
-                $this->write($data);
-                return;
-            }
-        }
-        $this->showError('Record with such id not found');
+        $this->existId($id);
+        $this->db->update('UPDATE `todo` SET `text` = :text, `checked` = :checked WHERE `id` = :id', ['id' => $id, 'text' => $text, 'checked' => (int) $checked]);
     }
 
     /**
@@ -55,16 +43,8 @@ class Todo
      * @param $id int Identifier
      */
     public function delete($id){
-        $data = $this->getItems();
-        foreach ($data as $item) {
-            if($item['id'] == $id){
-                unset($data[array_search($item, $data)]);
-                sort($data);
-                $this->write($data);
-                return;
-            }
-        }
-        $this->showError('Record with such id not found');
+        $this->existId($id);
+        $this->db->delete('DELETE FROM `todo` WHERE `id` = :id', ['id' => $id]);
     }
 
     /**
@@ -72,17 +52,7 @@ class Todo
      * @param $text string New Entry Text
      */
     public function add($text){
-        $data = $this->getItems();
-        $id = 0;
-        if(count($data) !== 0){
-            $id = ($data[count($data) -1 ]['id']) + 1;
-        }
-        array_push($data, [
-            'id' => $id,
-            'text' => $text,
-            'checked' => false
-            ]);
-        $this->write($data);
+        $this->db->insert('INSERT INTO `todo` (`id`, `text`, `checked`) VALUES (NULL, :text, \'0\');', ['text' => $text]);
     }
 
     /**
@@ -97,6 +67,13 @@ class Todo
         fclose($file);
     }
 
+    private function existId($id){
+        $result = $this->db->select('SELECT EXISTS(SELECT `id` FROM `todo` WHERE `id` = :id)', ['id' => $id]);
+        if(array_shift($result[0]) === '0'){
+            $this->showError('Record with such id not found');
+        }
+    }
+
     /**
      * It displays an error message and terminates the script.
      * @param $message string error message
@@ -104,6 +81,6 @@ class Todo
     private function showError($message){
         header('HTTP/1.0 400 Bad Request');
         echo json_encode(['error' => $message]);
-        return;
+        exit();
     }
 }
