@@ -33,6 +33,10 @@ class DB
         $query->execute($param);
     }
 
+    /**
+     * creates a table with users,
+     * and a table with entries
+     */
     public function install()
     {
         $this->db->query('

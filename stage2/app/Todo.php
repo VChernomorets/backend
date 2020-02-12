@@ -1,5 +1,4 @@
 <?php
-include 'DB.php';
 
 
 /**
@@ -48,25 +47,16 @@ class Todo
     }
 
     /**
-     * Reads all items. Recognizes the identifier of the last item and creates a new item.
+     *Creates a new todo in a table
      * @param $text string New Entry Text
      */
     public function add($text){
         $this->db->insert('INSERT INTO `todo` (`id`, `text`, `checked`) VALUES (NULL, :text, \'0\');', ['text' => $text]);
     }
 
-    /**
-     * Writes all entries to a file.
-     * @param null $date
+    /** checks for the existence of a record with this id
+     * @param $id id of the record to be checked
      */
-    private function write($date = null){
-        $file = fopen($this->config['data']['todo'], 'w');
-        if($date != null){
-            fwrite($file, json_encode($date));
-        }
-        fclose($file);
-    }
-
     private function existId($id){
         $result = $this->db->select('SELECT EXISTS(SELECT `id` FROM `todo` WHERE `id` = :id)', ['id' => $id]);
         if(array_shift($result[0]) === '0'){

@@ -10,8 +10,11 @@ if($text === ''){
 }
 $text = htmlspecialchars($text);
 
-$dir = dirname(__DIR__,3);
-include $dir . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Todo.php';
+$app = dirname(__DIR__,3). DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR;
+include $app .  'Todo.php';
+include $app .  'Accounts.php';
+$accounts = new Accounts();
+$accounts->checkAuth();
 $todo = new Todo();
 $todo->add($text);
 echo json_encode(['ok' => true]);
