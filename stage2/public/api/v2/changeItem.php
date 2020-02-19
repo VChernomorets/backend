@@ -1,5 +1,4 @@
 <?php
-
 $data = json_decode(file_get_contents("php://input"), true);
 
 $text = $data['text'] ?? '';
@@ -10,7 +9,9 @@ checkParameters($id, $text, $checked);
 
 $app = dirname(__DIR__,3). DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR;
 include $app .  'Todo.php';
-
+include $app .  'Accounts.php';
+$accounts = new Accounts();
+$accounts->checkAuth();
 $todo = new Todo();
 $todo->change($id, $text, $checked);
 echo json_encode(['ok' => true]);
@@ -23,8 +24,8 @@ function checkParameters($id, $text, $checked){
     if($text === ''){
         showError('$text - should not be empty');
     }
-    if($checked === '' || !(is_bool($checked) || $checked === 1 || $checked === 0)){
-        showError('$checked must contain true or false ' . $checked);
+    if($checked === '' || !is_bool($checked)){
+        showError('$checked must contain true or false');
     }
 }
 
@@ -32,5 +33,5 @@ function checkParameters($id, $text, $checked){
 function showError($message){
     header('HTTP/1.0 400 Bad Request');
     echo json_encode(['error' => $message]);
-    exit;
+    return;
 }

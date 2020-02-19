@@ -20,7 +20,7 @@ checkGetItems($links['v1']['getItems']);
 //checkGetItems($links['v1']['getItems']);
 
 function checkAddItem(){
-
+    var_dump();
 }
 
 function checkGetItems($link){

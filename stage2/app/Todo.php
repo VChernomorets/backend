@@ -1,6 +1,6 @@
 <?php
 
-
+include 'DB.php';
 /**
  * Class Todo
  * A class can create, delete, edit, return items.
@@ -22,7 +22,7 @@ class Todo
      * @return array List of entries.
      */
     public function getItems(){
-        return $this->db->select('SELECT * FROM `todo`', []);
+        return ['items' => $this->db->select('SELECT * FROM `todo`', [])];
     }
 
     /**
@@ -55,7 +55,7 @@ class Todo
     }
 
     /** checks for the existence of a record with this id
-     * @param $id id of the record to be checked
+     * @param $id int id of the record to be checked
      */
     private function existId($id){
         $result = $this->db->select('SELECT EXISTS(SELECT `id` FROM `todo` WHERE `id` = :id)', ['id' => $id]);
