@@ -15,6 +15,7 @@ $links = [
 //checkLogout($links['v1']['logout']);
 checkGetItems($links['v1']['getItems']);
 //checkLogin($links['v1']['login']);
+//checkRegister($links['v1']['register']);
 
 //checkGetItems($links['v1']['getItems']);
 
@@ -34,13 +35,21 @@ function checkLogin($link){
     query($link, json_encode($user));
 }
 
+function checkRegister($link){
+    $user = [
+        'login' => 'newTest',
+        'pass' => 'testerPass'
+    ];
+    query($link, json_encode($user));
+}
+
 function checkLogout($link){
     query($link);
 }
 
 function query($link, $data = ''){
     $cookieFileName = 'cookie.txt';
-    //checkCookieFile($cookieFileName);
+    checkCookieFile($cookieFileName);
     $query = curl_init();
     curl_setopt($query, CURLOPT_URL, $link);
     if($data !== '') {
@@ -55,16 +64,14 @@ function query($link, $data = ''){
     curl_setopt($query, CURLOPT_COOKIEFILE, $cookieFileName);
     curl_setopt($query, CURLOPT_COOKIEJAR,  $cookieFileName);
     print_r(curl_exec($query));
+    //var_dump(curl_getinfo($query));
     curl_close($query);
 
     //CURLOPT_FAILONERROR
 }
 
 function checkCookieFile($cookieFileName){
-    if(!file_exists($cookieFileName)){
-        file_put_contents($cookieFileName, '');
-    }
-    if(!is_writable($cookieFileName)){
+    if(!is_writable(__DIR__)){
         header('500 Internal Server Error');
         exit('no permissions to write to ' . $cookieFileName);
     }

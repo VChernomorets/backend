@@ -48,9 +48,9 @@ class Accounts
      */
     public function register($user, $password){
         $result = $this->db->select('SELECT EXISTS(SELECT `name` FROM `user` WHERE `name` = :name)', ['name' => $user]);
-        if(array_shift($result[0]) === '1'){
+        if(!empty($result) && array_shift($result[0]) === '1'){
             header('HTTP/1.0 400');
-            echo 'A user with the same name already exists.';
+            echo json_encode(['error' => 'A user with the same name already exists.']);
             return false;
         }
         $this->db->insert('INSERT INTO `user` (`id`, `name`, `pass`, `hash`) VALUES (NULL, :name, :pass, :hash)', ['name' => $user, 'pass' => md5($password), 'hash' => $this->createHash()]);

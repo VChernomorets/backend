@@ -1,7 +1,7 @@
 <?php
 $data = json_decode(file_get_contents("php://input"), true);
 
-$text = $data['text'] ?? '';
+$text = trim($data['text']) ?? '';
 
 if($text === ''){
     header('HTTP/1.0 400 Bad Request');

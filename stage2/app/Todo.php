@@ -3,7 +3,7 @@
 
 /**
  * Class Todo
- * A class can create, delete, edit, return records.
+ * A class can create, delete, edit, return items.
  * And also stores them.
  */
 class Todo
