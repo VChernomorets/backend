@@ -7,6 +7,8 @@ class Tester
 {
 
     private $version;
+    private $linkToApi;
+
     private $text;
     private $newText;
     private $checked;
@@ -14,9 +16,10 @@ class Tester
 
     private $result = [];
 
-    public function __construct($version, $text = 'test', $newText = 'test change', $checked = 1)
+    public function __construct($version, $linkToApi = 'http://localhost/api/', $text = 'test', $newText = 'test change', $checked = 1)
     {
         $this->version = $version;
+        $this->linkToApi = $linkToApi;
         $this->text = $text;
         $this->newText = $newText;
         $this->checked = $checked;
@@ -136,11 +139,16 @@ class Tester
 
     private function getLink($action)
     {
-        if ($this->version === 1 || $this->version === 2) {
-            return 'http://localhost/api/v1/' . $action . '.php';
-        }
-        if ($action === 3) {
-            return 'http://localhost/api/v1/router.php?=' . $action;
+        switch ($this->version){
+            case 1 :
+                return $this->linkToApi . 'v1' . DIRECTORY_SEPARATOR . $action . '.php';
+            case 2 :
+                return $this->linkToApi . 'v2' . DIRECTORY_SEPARATOR . $action . '.php';
+            case 3 :
+                return $this->linkToApi . 'v3' . DIRECTORY_SEPARATOR . 'router.php?action=' . $action;
+            default :
+                header('400 Bad Request');
+                exit('Version must be 1, 2 or 3');
         }
     }
 }
