@@ -74,7 +74,7 @@ class Tester
             $getItems = $this->query($this->getLink('getItems'));
             if ($getItems['code'] === 200) {
                 $lastItem = end($getItems['body']['items']);
-                if ($lastItem['text'] === $this->newText && $lastItem['checked'] === (string) $this->checked) {
+                if ($lastItem['text'] === $this->newText && $lastItem['checked'] == $this->checked) {
                     $this->result[$action]['status'] = 'successful';
                 } else {
                     $this->result[$action] = ['status' => 'fail', 'message' => 'the field has not changed or has changed incorrectly'];
@@ -141,11 +141,11 @@ class Tester
     {
         switch ($this->version){
             case 1 :
-                return $this->linkToApi . 'v1' . DIRECTORY_SEPARATOR . $action . '.php';
+                return $this->linkToApi . 'v1/' . $action . '.php';
             case 2 :
-                return $this->linkToApi . 'v2' . DIRECTORY_SEPARATOR . $action . '.php';
+                return $this->linkToApi . 'v2/' . $action . '.php';
             case 3 :
-                return $this->linkToApi . 'v3' . DIRECTORY_SEPARATOR . 'router.php?action=' . $action;
+                return $this->linkToApi . 'v3/' . 'router.php?action=' . $action;
             default :
                 header('400 Bad Request');
                 exit('Version must be 1, 2 or 3');
