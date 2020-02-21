@@ -169,12 +169,6 @@ class Tester
         $body = curl_exec($query);
         $code = curl_getinfo($query, CURLINFO_RESPONSE_CODE);
         curl_close($query);
-
-        if($code !== 200){
-            echo $body;
-            exit();
-        }
-
         return ['body' => json_decode($body, true), 'code' => $code];
     }
 
