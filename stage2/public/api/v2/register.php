@@ -1,7 +1,6 @@
 <?php
 
 $data = json_decode(file_get_contents('php://input'), true);
-
 if (($data['login'] ?? '') === '' || ($data['pass'] ?? '') === '') {
     header('HTTP/1.0 400 Bad Request');
     echo 'Error in user or pass field';

@@ -74,7 +74,8 @@ function changeItem($id, $text, $checked)
     if (!valid($text, '/.{3}/')) {
         showError('The text field must contain at least 3 characters');
     }
-    if( $checked === '' || !is_bool($checked)){
+    settype($checked, 'bool');
+    if( $checked === ''){
         showError('The checked field must contain true or false');
     }
     $todo = new Todo();
@@ -149,7 +150,7 @@ function register($login, $pass)
 
 /**
  * Displays an error to the user.
- * @param $message error text
+ * @param $message string error text
  */
 function showError($message)
 {

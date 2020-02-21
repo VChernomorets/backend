@@ -1,6 +1,6 @@
 <?php
 
-$tester = new Tester(1);
+$tester = new Tester(3);
 echo json_encode($tester->getResult());
 
 class Tester
@@ -13,27 +13,69 @@ class Tester
     private $newText;
     private $checked;
     private $id = 0;
+    private $user;
 
     private $result = [];
 
-    public function __construct($version, $linkToApi = 'http://localhost/api/', $text = 'test', $newText = 'test change', $checked = 1)
+    public function __construct($version, $linkToApi = 'http://localhost/api/', $text = 'test', $newText = 'test change', $checked = 1, $user = ['login' => 'tester', 'pass' => 'testerPass'])
     {
         $this->version = $version;
         $this->linkToApi = $linkToApi;
         $this->text = $text;
         $this->newText = $newText;
         $this->checked = $checked;
+        $this->user = $user;
     }
 
     public function getResult()
     {
+        if ($this->version === 2 || $this->version === 3) {
+            $this->checkRegister();
+            $this->checkLogout();
+            $this->checkLogin();
+        }
         $this->checkAddItem();
         $this->checkGetItems();
-        //
+
         $this->checkChange();
         $this->checkDelete();
 
         return $this->result;
+    }
+
+    private function checkLogin(){
+        $action = 'login';
+        $result = $this->query($this->getLink($action), json_encode($this->user));
+        if($result['code'] === 200){
+            if(isset($result['body']['ok']) && $result['body']['ok']){
+                $this->result[$action]['status'] = 'successful';
+            } else{
+                $this->result[$action] = ['status' => 'fail', 'message' => 'answer !== {"ok":true}'];
+            }
+            return;
+        }
+        $this->result[$action] = ['status' => 'fail', 'message' => 'code !== 200'];
+    }
+
+    private function checkLogout(){
+        $action = 'logout';
+        $result = $this->query($this->getLink($action));
+        $this->checkStatusOk($action, $result['code'], $result['body']);
+    }
+
+    function checkStatusOk($action, $code, $body){
+        if($code !== 200){
+            $this->result[$action] = ['status' => 'fail', 'message' => 'code !== 200'];
+            return;
+        }
+        $this->result[$action] = isset($body['ok']) && $body['ok'] ? ['status' => 'successful'] : ['status' => 'fail', 'message' => 'answer !== {"ok":true}'];
+    }
+
+    private function checkRegister()
+    {
+        $action = 'register';
+        $result = $this->query($this->getLink($action), json_encode($this->user));
+        $this->checkStatusOk($action, $result['code'], $result['body']);
     }
 
     private function checkAddItem()
@@ -87,13 +129,14 @@ class Tester
         }
     }
 
-    private function checkDelete(){
+    private function checkDelete()
+    {
         $action = 'deleteItem';
         $result = $this->query($this->getLink($action), json_encode(['id' => $this->id]));
-        if($result['code'] === 200){
+        if ($result['code'] === 200) {
             $getItems = $this->query($this->getLink('getItems'));
-            if($getItems['code'] === 200){
-                if($getItems['body']['items'] === [] || end($getItems['body']['items'])['id'] !== $this->id){
+            if ($getItems['code'] === 200) {
+                if ($getItems['body']['items'] === [] || end($getItems['body']['items'])['id'] !== $this->id) {
                     $this->result[$action]['status'] = 'successful';
                 } else {
                     $this->result[$action] = ['status' => 'fail', 'message' => 'item not deleted'];
@@ -126,6 +169,12 @@ class Tester
         $body = curl_exec($query);
         $code = curl_getinfo($query, CURLINFO_RESPONSE_CODE);
         curl_close($query);
+
+        if($code !== 200){
+            echo $body;
+            exit();
+        }
+
         return ['body' => json_decode($body, true), 'code' => $code];
     }
 
@@ -139,7 +188,7 @@ class Tester
 
     private function getLink($action)
     {
-        switch ($this->version){
+        switch ($this->version) {
             case 1 :
                 return $this->linkToApi . 'v1/' . $action . '.php';
             case 2 :

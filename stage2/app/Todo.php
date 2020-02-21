@@ -1,6 +1,6 @@
 <?php
 
-include 'DB.php';
+include_once 'DB.php';
 /**
  * Class Todo
  * A class can create, delete, edit, return items.

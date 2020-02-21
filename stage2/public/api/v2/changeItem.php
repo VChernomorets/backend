@@ -24,7 +24,8 @@ function checkParameters($id, $text, $checked){
     if($text === ''){
         showError('$text - should not be empty');
     }
-    if($checked === '' || !is_bool($checked)){
+    settype($checked, 'bool');
+    if($checked === ''){
         showError('$checked must contain true or false');
     }
 }
