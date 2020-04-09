@@ -1,0 +1,1 @@
+ALTER TABLE books ADD wantRead int(9) DEFAULT 0;

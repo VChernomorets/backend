@@ -6,22 +6,18 @@ class Route
     static function start()
     {
         $controller_name = 'Main';
-        $action_name = 'index';
+        $actions = ['index'];
 
-        $uri = $_SERVER['REQUEST_URI'] ?? '';
-        if (substr($uri, 1, 1) !== '?') {
-            $routes = explode('/', $uri);
-            if (!empty($routes[1])) {
-                $controller_name = $routes[1];
-            }
-            if (!empty($routes[2])) {
-                $action_name = $routes[2];
-            }
+        $uri = preg_replace('/\?.+/', '', $_SERVER['REQUEST_URI'] ?? '');
+        $routes = explode('/', $uri);
+        if (!empty($routes[1])) {
+            $controller_name = $routes[1];
         }
-
+        if (!empty($routes[2])) {
+            $actions = array_slice($routes, 2);
+        }
         $model_name = 'Model_' . $controller_name;
         $controller_name = 'Controller_' . $controller_name;
-        $action_name = 'action_' . $action_name;
 
         $model_file = strtolower($model_name) . '.php';
         $model_path = dirname(__DIR__) . '/models/' . $model_file;
@@ -39,7 +35,7 @@ class Route
         }
 
         $controller = new $controller_name;
-        $controller->action($action_name);
+        $controller->action($actions);
         /*if (method_exists($controller, $action)) {
             $controller->$action();
         } else {

@@ -1,0 +1,1 @@
+ALTER TABLE books ADD deleted int(1) DEFAULT 0;

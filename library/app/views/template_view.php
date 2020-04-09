@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="library Sh++">
-    <link rel="stylesheet" href="css/libs.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/libs.min.css">
+    <link rel="stylesheet" href="/css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
           crossorigin="anonymous"/>
@@ -30,12 +30,12 @@
                                     $("#search").bind("keypress", function (e) {
                                         if (e.keyCode == 13) {
                                             e.preventDefault();
-                                            alert("а вот это придется сделать самому. Ваш @rshmelev");
+                                            document.location.href = '/?search=' + $(this).val();
                                         }
                                     })
                                 </script>
 
-                                <div class="loader"><img src="./books-page_files/loading.gif"></div>
+                                <div class="loader"><img src="/img/loading.gif"></div>
                                 <div id="list" size="" class="bAutoComplete mSearchAutoComplete"></div>
                             </div>
                         </form>

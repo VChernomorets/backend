@@ -9,6 +9,15 @@ class Controller_Main extends Controller
         $this->model = new Model_Main();
     }
 
+    function action($actions){
+        $action = 'action_' . $actions[0];
+        if(method_exists($this, $action)){
+            $this->$action();
+        } else {
+            echo 'Not action!';
+        }
+    }
+
     function action_index()
     {
         $data = $this->model->get_data();

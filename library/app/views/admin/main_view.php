@@ -1,5 +1,3 @@
-
-
 <div class="container">
     <header>
         <div class="row">
@@ -13,48 +11,8 @@
             </div>
         </div>
     </header>
-    <div class="row justify-content-between">
-        <div class="col-lg-7 books">
-            <div class="books"></div>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col">Название</th>
-                    <th scope="col">Автор</th>
-                    <th scope="col">Год</th>
-                    <th scope="col">Кликов</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($data['books'] as $book) { ?>
-                    <tr>
-                        <td><img src="/img/books/<?= $book['img'] ?>" alt="" style="width: 50px"></td>
-                        <td><?= $book['name'] ?></td>
-                        <td><?= $book['author'] ?></td>
-                        <td><?= $book['year'] ?></td>
-                        <td>3</td>
-                    </tr>
-                <?php } ?>
-                </tbody>
-            </table>
-
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-
-        <div class="col-lg-5 addBook">
+    <div class="row mb-5">
+        <div class="col-lg-6 addBook">
             <h4>Добавить новую книгу</h4>
             <form name="addBook" action="/form/addBook/" method="post" enctype="multipart/form-data">
                 <div class="row">
@@ -95,6 +53,52 @@
             </form>
         </div>
     </div>
+    <div class="row justify-content-between">
+        <div class="col-lg-12 books">
+            <div class="books"></div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Автор</th>
+                    <th scope="col">Год</th>
+                    <th scope="col">Кликов</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($data['books'] as $book) { ?>
+                    <tr>
+                        <td><img src="/img/books/<?= $book['img'] ?>" alt="" style="width: 50px"></td>
+                        <td><?= $book['name'] ?></td>
+                        <td><?= $book['author'] ?></td>
+                        <td><?= $book['year'] ?></td>
+                        <td><?= $book['click'] ?></td>
+                        <td><a href="/form/deleteBook?id=<?= $book['id'] ?>">удалить</a></td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
 
-
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item <?= (($_GET['page'] ?? 1) > 1) ? '' : 'disabled' ?>">
+                        <a class="page-link" href="?page=<?=$_GET['page'] -1?>" tabindex="-1">Previous</a>
+                    </li>
+                    <?php
+                    $numberPages = ceil($data['numberBooks'] / 20);
+                    for ($i = 1; $i <= $numberPages; $i++){
+                    ?>
+                        <li class="page-item <?= ($_GET['page'] ?? 1) == $i ? 'disabled' : ''?>">
+                            <a class="page-link" href="?page=<?=$i?>"><?=$i?></a>
+                        </li>
+                    <?php } ?>
+                    <li class="page-item <?= ($numberPages > ($_GET['page'] ?? 1))  ? '' : 'disabled' ?>">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 </div>
